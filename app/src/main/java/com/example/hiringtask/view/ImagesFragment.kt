@@ -50,7 +50,12 @@ class ImagesFragment : Fragment() {
 
     private fun observeImages(){
         viewModel.images.observe(viewLifecycleOwner){
-            imagesAdaptor.submitList(it)
+            if (it.isEmpty()){
+                binding.emptyTV.visibility = View.VISIBLE
+            }else{
+                binding.emptyTV.visibility = View.GONE
+                imagesAdaptor.submitList(it)
+            }
         }
     }
 

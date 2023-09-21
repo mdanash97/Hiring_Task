@@ -42,7 +42,12 @@ class VideosFragment : Fragment() {
     }
     private fun observeVideos(){
         viewModel.videos.observe(viewLifecycleOwner){
-            videosAdaptor.submitList(it)
+            if (it.isEmpty()){
+                binding.emptyTV.visibility = View.VISIBLE
+            }else{
+                binding.emptyTV.visibility = View.GONE
+                videosAdaptor.submitList(it)
+            }
         }
     }
 
