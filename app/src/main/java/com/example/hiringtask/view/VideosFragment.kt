@@ -7,23 +7,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.hiringtask.databinding.FragmentVideosBinding
+import com.example.hiringtask.viewmodel.ViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VideosFragment : Fragment() {
 
-    lateinit var videosAdaptor: VideosAdaptor
     private lateinit var videosBinding: FragmentVideosBinding
-    var videos = mutableListOf<Video>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val viewModel: ViewModel by viewModels()
+    private val videosAdaptor by lazy {
+        VideosAdaptor()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         videosBinding = FragmentVideosBinding.inflate(inflater,container,false)
         return videosBinding.root
@@ -31,40 +34,23 @@ class VideosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadAllVideos()
 
-        videosAdaptor = VideosAdaptor()
-        videosAdaptor.submitList(videos)
+        viewModel.getVideos()
+        observeVideos()
+        setVideosRV()
+    }
+    private fun observeVideos(){
+        viewModel.videos.observe(viewLifecycleOwner){
+            videosAdaptor.submitList(it)
+        }
+    }
+
+    private fun setVideosRV(){
         videosBinding.vidRV.apply {
             layoutManager = GridLayoutManager(requireContext(),4)
             adapter = videosAdaptor
         }
     }
 
-    private fun loadAllVideos() {
-        val projection = arrayOf(
-            MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.DISPLAY_NAME
-        )
-        val cursor = requireActivity().contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            null,
-            null,
-            null
-        )?.use {cursor->
-            val idColumn = cursor.getColumnIndex(MediaStore.Video.Media._ID)
-            val nameColumn = cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)
 
-            while (cursor.moveToNext()){
-                val id = cursor.getLong(idColumn)
-                val name = cursor.getString(nameColumn)
-                val uri = ContentUris.withAppendedId(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                    id
-                )
-                videos.add(Video(id,name,uri))
-            }
-        }
-    }
 }

@@ -11,7 +11,9 @@ import com.example.hiringtask.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.Manifest
 import androidx.core.app.ActivityCompat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var mainBinding: ActivityMainBinding
