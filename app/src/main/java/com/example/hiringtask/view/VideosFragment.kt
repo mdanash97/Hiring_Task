@@ -16,7 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class VideosFragment : Fragment() {
 
-    private lateinit var videosBinding: FragmentVideosBinding
+    private var videosBinding: FragmentVideosBinding? = null
+    private val binding get() = videosBinding!!
     private val viewModel: ViewModel by viewModels()
     private val videosAdaptor by lazy {
         VideosAdaptor()
@@ -29,7 +30,7 @@ class VideosFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         videosBinding = FragmentVideosBinding.inflate(inflater,container,false)
-        return videosBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,11 +47,14 @@ class VideosFragment : Fragment() {
     }
 
     private fun setVideosRV(){
-        videosBinding.vidRV.apply {
+        binding.vidRV.apply {
             layoutManager = GridLayoutManager(requireContext(),4)
             adapter = videosAdaptor
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        videosBinding = null
+    }
 }

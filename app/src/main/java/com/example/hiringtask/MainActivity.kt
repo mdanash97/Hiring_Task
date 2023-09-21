@@ -10,25 +10,26 @@ import androidx.navigation.ui.NavigationUI
 import com.example.hiringtask.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.Manifest
+import android.view.View
 import androidx.core.app.ActivityCompat
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    lateinit var mainBinding: ActivityMainBinding
-    lateinit var navController: NavController
-    lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var navController: NavController
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainBinding.root)
+        val view: View = mainBinding.root
+        setContentView(view)
 
         navController = Navigation.findNavController(this,R.id.nav_host_fragment)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
         NavigationUI.setupWithNavController(bottomNavigationView,navController,false)
     }
-
 }

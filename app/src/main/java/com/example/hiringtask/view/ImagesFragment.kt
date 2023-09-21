@@ -21,7 +21,8 @@ class ImagesFragment : Fragment() {
     private val imagesAdaptor by lazy{
         ImagesAdaptor()
     }
-    private lateinit var imagesBinding: FragmentImagesBinding
+    private var imagesBinding: FragmentImagesBinding? = null
+    private val binding get() = imagesBinding!!
     private val viewModel:ViewModel by viewModels()
 
 
@@ -31,7 +32,7 @@ class ImagesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         imagesBinding = FragmentImagesBinding.inflate(inflater,container,false)
-        return imagesBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +55,7 @@ class ImagesFragment : Fragment() {
     }
 
     private fun setImagesRV(){
-        imagesBinding.imgRV.apply {
+        binding.imgRV.apply {
             layoutManager = GridLayoutManager(requireContext(),4)
             adapter = imagesAdaptor
         }
@@ -83,5 +84,10 @@ class ImagesFragment : Fragment() {
         }else{
             askForPermission()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        imagesBinding = null
     }
 }

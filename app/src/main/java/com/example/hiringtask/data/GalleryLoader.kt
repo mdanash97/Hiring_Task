@@ -7,8 +7,9 @@ import com.example.hiringtask.view.Image
 import com.example.hiringtask.view.Video
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class GalleryLoader(private val context: Context) {
+class GalleryLoader @Inject constructor(private val context: Context) {
 
     fun loadAllImages() : Flow<List<Image>> = flow{
         val images = mutableListOf<Image>()
